@@ -1,17 +1,14 @@
 package dk.dtu.chp.decoder;
 
-import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class SWEDecoder {
 	// Filename that the decoder is tied to.
@@ -21,7 +18,7 @@ public class SWEDecoder {
 	private int k;
 	private String s;
 	private ArrayList<String> t;
-	private HashMap<String, ArrayList<String> > R;
+	private HashMap<Character, ArrayList<String> > R;
 	
 	
 	public SWEDecoder(String filename) { 
@@ -29,7 +26,7 @@ public class SWEDecoder {
 		this.lock = true;
 		
 		t = new ArrayList<String>();
-		R = new HashMap<String, ArrayList<String>>();
+		R = new HashMap<Character, ArrayList<String>>();
 	}
 	
 	
@@ -74,15 +71,15 @@ public class SWEDecoder {
 					throw new ParseException("Error in parsing entry " + t + " of R.", subset);
 				}
 				
-				String m = subset.substring(0, 1);
 				ArrayList<String> set = new ArrayList<String>( Arrays.asList( subset.substring(2, subset.length()).split(",") ) );
-				this.R.put(m, set);
+				this.R.put(subset.charAt(0), set);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println("[SWE Decoder] File " + this.filename + " successfully decoded!");
+		lock=false;
 		return true;
 	}
 	
@@ -102,7 +99,7 @@ public class SWEDecoder {
 		return null;
 	}
 	
-	public HashMap<String, ArrayList<String> > getR(){
+	public HashMap<Character, ArrayList<String> > getR(){
 		if(!this.lock) return this.R;
 		return null;
 	}

@@ -1,5 +1,6 @@
 package dk.dtu.chp.decoder;
 
+@SuppressWarnings("serial")
 public class ParseException extends Exception {
 
 	private String errorCause;
