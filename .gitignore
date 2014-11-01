@@ -26,3 +26,6 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
+# OS X Sucks
+.DS_store
+.DS_Store
