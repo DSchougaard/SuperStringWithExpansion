@@ -82,10 +82,7 @@ public class Reducer {
 		}
 	}
 
-	private void reduceTList(){
-		
-		System.out.println(this.decoder.getT());
-		
+	private void reduceTList(){		
 		Collections.sort(this.decoder.getT(), new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
@@ -111,12 +108,8 @@ public class Reducer {
 			}
 			if(!flag){
 				this.reducedTList.add(s);
-			}
-			
+			}	
 		}
-		
-		System.out.println(this.reducedTList);
-
 	}
 	
 	private void reduceSet(HashMap<Character, ArrayList<String>> newR){
@@ -270,8 +263,7 @@ public class Reducer {
 		}
 		
 				
-		System.out.println(newR);
-		//this.printResultList(newR);
+		this.printResultList(newR);
 		//HashMap<Character, String> result = this.recursive(newR, this.decoder.getT(), assigned);
 		//this.printResult(newR);
 

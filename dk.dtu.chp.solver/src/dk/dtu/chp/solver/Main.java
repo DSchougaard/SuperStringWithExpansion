@@ -14,6 +14,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		
+		Benchmarker.run(100);
+		
+		/*
 		Timer timer= new Timer();
 		timer.start();
 
@@ -27,8 +31,8 @@ public class Main {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		System.out.println("time: "+ timer.time() + "s");
+		*/
+		//System.out.println("time: "+ timer.time() + "s");
 
 		
 		//Benchmarker.run(3);
