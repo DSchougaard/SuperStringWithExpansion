@@ -13,16 +13,25 @@ import dk.dtu.chp.solver.utils.Timer;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		Timer timer= new Timer();
+		timer.start();
+
 		try{
 			StdInReader sir = new StdInReader();
-			FileReader fr = new FileReader("test01.SWE");
+			FileReader fr = new FileReader("test06.SWE");
 			SWEDecoder swed = new SWEDecoder();
-			swed.parse(sir.read());
-			Reducer reduction = new Reducer(swed, true);
+			swed.parse(fr.read());
+			Reducer reduction = new Reducer(swed, false);
 			reduction.start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		//System.out.println("time: "+ timer.time() + "s");
+
+		
+		//Benchmarker.run(3);
 		
 	}
 
