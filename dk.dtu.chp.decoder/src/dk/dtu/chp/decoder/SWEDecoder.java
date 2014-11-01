@@ -25,7 +25,7 @@ public class SWEDecoder {
 	public boolean parse(ArrayList<String> content) throws ParseException{
 					
 		String k_string = content.get(0);
-		if( !k_string.matches("[0-9]+") ){
+		if( !k_string.matches("[1-9][0-9]*") ){
 			throw new ParseException("Error in parsing k", k_string);
 		}
 		
