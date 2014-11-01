@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Timer {
 	private static long start;
-	private static ArrayList<Long> time= new ArrayList<Long>();
+	private static ArrayList<Long> time = new ArrayList<Long>();
 	
 	public Timer(){
 		

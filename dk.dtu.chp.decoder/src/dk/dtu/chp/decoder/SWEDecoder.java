@@ -78,7 +78,7 @@ public class SWEDecoder {
 			e.printStackTrace();
 		}
 		
-		System.out.println("[SWE Decoder] File " + this.filename + " successfully decoded!");
+		//System.out.println("[SWE Decoder] File " + this.filename + " successfully decoded!");
 		lock=false;
 		return true;
 	}
