@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import dk.dtu.chp.decoder.SWEDecoder;
+import dk.dtu.chp.optimized_decoder.Decoder;
 
 public class Reducer {
 	// personal
@@ -98,8 +99,9 @@ public class Reducer {
 			ArrayList<String> testT = new ArrayList<String>();
 			
 			for( String s :  T ){
+				String t = "";
+
 				for( int i = 0 ; i < s.length() ; i++ ){
-					String t = "";
 					
 					if( Character.isUpperCase( s.charAt(i) ) ){
 						t = t + assigned.get(s.charAt(i));
@@ -107,14 +109,16 @@ public class Reducer {
 						t = t + s.charAt(i);
 					}
 				}
+				testT.add(t);
+
 			}
+			
 			
 			for( String s : testT ){
 				if( !this.substrings.contains(s) ){
 					return null;
 				}
 			}
-			
 			return assigned;
 		}
 
