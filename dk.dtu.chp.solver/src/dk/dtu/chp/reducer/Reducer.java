@@ -116,7 +116,7 @@ public class Reducer {
 		}
 		
 		System.out.println(this.reducedTList);
-		
+
 	}
 	
 	private void reduceSet(HashMap<Character, ArrayList<String>> newR){
@@ -182,9 +182,12 @@ public class Reducer {
 			
 			HashMap<Character, ArrayList<String>> result = recursive(set, T, t_index+1, newAssigned);
 			
+			//For each of the elements, in the returned set 
 			for( Character chr : result.keySet() ){
 				ArrayList<String> insertIntoList = result.get(chr);	
+				// Find the list of already known ties, based on the accumulated result
 				ArrayList<String> mainList = accumulatedResult.get(chr);
+				// Of the list is null, no previously data has been collected on this char
 				if( mainList == null ){
 					mainList = new ArrayList<String>();
 				}
@@ -208,6 +211,7 @@ public class Reducer {
 		}
 		return accumulatedResult;
 	}
+	
 	
 	private void printResult(HashMap<Character, String> assigned){
 		if( assigned == null ){
@@ -241,6 +245,8 @@ public class Reducer {
 		this.constructSubstrings();
 		HashMap<Character, ArrayList<String>> newR = new HashMap<Character, ArrayList<String>>();
 		this.reduceSet(newR);
+		this.reduceTList();
+
 	
 		if(this.print){
 			System.out.println("After reduction");
@@ -249,7 +255,7 @@ public class Reducer {
 		
 		HashMap<Character, String> assigned = new HashMap<Character, String>();
 		HashMap<Character, ArrayList<String>> result = null;
-		for(String s : this.decoder.getT() ){
+		for(String s : this.reducedTList ){
 			result = recursive(newR, s, 0, assigned);
 			
 			if( result.isEmpty() ){
@@ -263,7 +269,6 @@ public class Reducer {
 			}
 		}
 		
-		this.reduceTList();
 				
 		System.out.println(newR);
 		//this.printResultList(newR);
