@@ -1,18 +1,11 @@
 package dk.dtu.chp.decoder;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class SWEDecoder {
-	// Filename that the decoder is tied to.
-	private String filename;
+	
 	private boolean lock;
 	
 	private int k;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import dk.dtu.chp.decoder.ParseException;
 import dk.dtu.chp.decoder.SWEDecoder;
-import dk.dtu.chp.optimized_decoder.Decoder;
 import dk.dtu.chp.readers.FileReader;
 import dk.dtu.chp.reducer.Reducer;
 import dk.dtu.chp.solver.utils.Timer;
