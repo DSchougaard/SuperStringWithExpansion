@@ -1,17 +1,13 @@
 package dk.dtu.chp.reducer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import dk.dtu.chp.decoder.SWEDecoder;
-import dk.dtu.chp.optimized_decoder.Decoder;
+import dk.dtu.chp.solver.theBrute.TheBrute;
 
 public class Reducer {
 	// personal
@@ -53,6 +49,9 @@ public class Reducer {
 		}
 	}
 	
+	/**
+	 * constructs all substrings of s 
+	 */
 	private void constructSubstrings(){
 		for( int i = 0 ; i < decoder.getS().length() ; i++ ){
 			for( int j = 1 ; j <= decoder.getS().length() - i ; j++ ){
@@ -62,20 +61,23 @@ public class Reducer {
 		}
 	}
 	
+	/**
+	 * removes unused r values
+	 */
 	private void removeUnused(){
-		int[] is = new int[26];
+		boolean[] is = new boolean[26];
 		for( int i = 0 ; i < this.decoder.getT().size() ; i++ ){
 			for( int j = 0; j < this.decoder.getT().get(i).length() ; j++ ){
 
 				if( Character.isUpperCase(this.decoder.getT().get(i).charAt(j)) ){ 
 					int index = (int) this.decoder.getT().get(i).charAt(j) - 65;
-					is[index] = 1;
+					is[index] = true;
 				}
 			}
 		}
 		
 		for( int i = 0 ; i < 26 ; i++ ){
-			if( is[i] == 0 ){
+			if( !is[i]){
 				char c = (char) (i+65);
 				this.personal_r.remove(c);
 			}
@@ -152,8 +154,7 @@ public class Reducer {
 					ArrayList<String> basis_list = new ArrayList<String>();
 					basis_list.add( assigned.get(chr) );
 					basis_set.put(chr, basis_list);
-					
-					String s = "";
+
 				}
 			}
 			return basis_set;
@@ -164,7 +165,16 @@ public class Reducer {
 			return recursive(set, T, t_index+1, assigned);
 		}
 		
-		ArrayList<String> temp = set.get(c);
+		//ArrayList<String> temp = set.get(c);
+		
+		ArrayList<String> temp = null;
+		if( set.get(c) == null && assigned.get(c) != null ){
+			temp = new ArrayList<String>();
+			temp.add(assigned.get(c));
+		}else{
+			temp = new ArrayList<String>(set.get(c));
+		}
+		
 		HashMap<Character, ArrayList<String>> newSet = new HashMap<Character, ArrayList<String>>(set);
 		newSet.remove(c);
 		
@@ -173,7 +183,7 @@ public class Reducer {
 			HashMap<Character, String> newAssigned = new HashMap<Character, String>(assigned);
 			newAssigned.put(c, temp.get(j));
 			
-			HashMap<Character, ArrayList<String>> result = recursive(set, T, t_index+1, newAssigned);
+			HashMap<Character, ArrayList<String>> result = recursive(newSet, T, t_index+1, newAssigned);
 			
 			//For each of the elements, in the returned set 
 			for( Character chr : result.keySet() ){
@@ -225,7 +235,15 @@ public class Reducer {
 			}
 		}
 	}
-	
+	private void printResultList2(HashMap<Character, String> assigned){
+		if( assigned == null ){
+			System.out.println("NO");
+		}else{
+			for( Character c : assigned.keySet() ){
+				System.out.println(c + ":" + assigned.get(c));
+			}
+		}
+	}
 	
 	
 	public void start(){
@@ -238,13 +256,17 @@ public class Reducer {
 		this.constructSubstrings();
 		HashMap<Character, ArrayList<String>> newR = new HashMap<Character, ArrayList<String>>();
 		this.reduceSet(newR);
+		
+		
 		this.reduceTList();
-
+//		System.out.println(newR);
 	
 		if(this.print){
 			System.out.println("After reduction");
 			this.printSetSize(newR);
 		}
+
+
 		
 		HashMap<Character, String> assigned = new HashMap<Character, String>();
 		HashMap<Character, ArrayList<String>> result = null;
@@ -261,9 +283,16 @@ public class Reducer {
 				newR.put(c, result.get(c));
 			}
 		}
-		
-				
-		this.printResultList(newR);
+		if(!newR.isEmpty()){
+		TheBrute brutus= new TheBrute(newR, decoder.getS(), reducedTList);
+		printResultList2(brutus.run2());
+
+		}else{
+			System.out.println("NO");
+		}
+//		System.out.println("result: "+brutus.run());	
+//		System.out.println(newR);
+//		this.printResultList(newR);
 		//HashMap<Character, String> result = this.recursive(newR, this.decoder.getT(), assigned);
 		//this.printResult(newR);
 

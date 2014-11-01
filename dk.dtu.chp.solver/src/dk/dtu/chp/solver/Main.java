@@ -15,24 +15,24 @@ public class Main {
 	public static void main(String[] args) {
 		
 		
-		Benchmarker.run(100);
+//		Benchmarker.run(100);
 		
-		/*
-		Timer timer= new Timer();
-		timer.start();
+		
+//		Timer timer= new Timer();
+//		timer.start();
 
 		try{
 			StdInReader sir = new StdInReader();
-			FileReader fr = new FileReader("test06.SWE");
+//			FileReader fr = new FileReader("test02.SWE");
 			SWEDecoder swed = new SWEDecoder();
-			swed.parse(fr.read());
+			swed.parse(sir.read());
 			Reducer reduction = new Reducer(swed, false);
 			reduction.start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		*/
-		//System.out.println("time: "+ timer.time() + "s");
+		
+//		System.out.println("time: "+ timer.time() + "s");
 
 		
 		//Benchmarker.run(3);
