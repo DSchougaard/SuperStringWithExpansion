@@ -28,7 +28,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		//System.out.println("time: "+ timer.time() + "s");
+		System.out.println("time: "+ timer.time() + "s");
 
 		
 		//Benchmarker.run(3);

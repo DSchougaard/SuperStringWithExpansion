@@ -1,6 +1,9 @@
 package dk.dtu.chp.reducer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +19,7 @@ public class Reducer {
 	HashSet<String> substrings;
 	HashMap<Character, ArrayList<String>> personal_r;
 	boolean print;
+	ArrayList<String> reducedTList;
 	
 	// parsed
 	SWEDecoder decoder;
@@ -29,6 +33,7 @@ public class Reducer {
 		//this.substrings = new ArrayList<String>();
 		this.substrings = new HashSet<String>();
 		this.personal_r = new HashMap<Character, ArrayList<String>>(this.decoder.getR());
+		this.reducedTList = new ArrayList<String>();
 	}
 	
 	private void printSetSize(HashMap<Character, ArrayList<String>> set){
@@ -76,6 +81,43 @@ public class Reducer {
 			}
 		}
 	}
+
+	private void reduceTList(){
+		
+		System.out.println(this.decoder.getT());
+		
+		Collections.sort(this.decoder.getT(), new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				if(o1.length() < o2.length() ){
+					return 1;
+				}
+				if(o1.length() > o2.length() ){
+					return -1;
+				}
+				return 0;
+			}
+		});
+		
+		
+		for( String s : this.decoder.getT() ){
+			boolean flag = false;
+			for( String s2 : this.reducedTList ){
+				if(s2.contains(s)){
+					flag = true;
+					break;
+				}
+	
+			}
+			if(!flag){
+				this.reducedTList.add(s);
+			}
+			
+		}
+		
+		System.out.println(this.reducedTList);
+		
+	}
 	
 	private void reduceSet(HashMap<Character, ArrayList<String>> newR){
 		for( int i = 65 ; i < 91 ; i++ ){
@@ -97,137 +139,74 @@ public class Reducer {
 			}
 		}
 	}
-	
-	private HashMap<Character, String> recursive(HashMap<Character, ArrayList<String>> set, ArrayList<String> T, HashMap<Character, String> assigned){
-	
 		
-		// Completely naive depth first solution
-		
-		// Stop criteria
-		if( set.isEmpty() ){
-			ArrayList<String> testT = new ArrayList<String>();
-			
-			for( String s :  T ){
-				String t = "";
+	
+	
 
-				for( int i = 0 ; i < s.length() ; i++ ){
+	private HashMap<Character, ArrayList<String>> recursive(HashMap<Character, ArrayList<String>> set, String T, int t_index, HashMap<Character, String> assigned){
+		if( T.length() == t_index ){
+			String T2 = "";
+			for( int i = 0 ; i < t_index ; i++ ){
+				if( Character.isUpperCase(T.charAt(i)) ){
+					T2 = T2 + assigned.get(T.charAt(i));
+				}else{
+					T2 = T2 + T.charAt(i);
+				}
+			}
+			HashMap<Character, ArrayList<String>> basis_set = new HashMap<Character, ArrayList<String>>();
+			if( T2 != "" && this.substrings.contains(T2) ){
+				for( Character chr : assigned.keySet() ){
+					ArrayList<String> basis_list = new ArrayList<String>();
+					basis_list.add( assigned.get(chr) );
+					basis_set.put(chr, basis_list);
 					
-					if( Character.isUpperCase( s.charAt(i) ) ){
-						t = t + assigned.get(s.charAt(i));
-					}else{
-						t = t + s.charAt(i);
-					}
-				}
-				testT.add(t);
-			}
-			
-			for( String s : testT ){
-				if( !this.substrings.contains(s) ){
-					return null;
+					String s = "";
 				}
 			}
-			return assigned;
+			return basis_set;
 		}
-
-		
-		// Remove first entry in set, assign new variables in assigned.
-		for( int i = 65 ; i < 91 ; i++ ){
-			char c = (char)i;
-			if( set.containsKey(c) ){
-				HashMap<Character, ArrayList<String>> tempSet = new HashMap<Character, ArrayList<String>>(set);
-				
-				
-				ArrayList<String> temp = tempSet.get(c);
-				tempSet.remove(c);
-
-				for( int j = 0 ; j < temp.size() ; j++ ){
-					HashMap<Character, String> newAssigned = new HashMap<>(assigned);
-					newAssigned.put(c, temp.get(j));
-					
-					HashMap<Character, String> result = recursive(tempSet, T, newAssigned);
-					if( result != null ){
-						return result;
-					}
-				}
-			}
+	
+		char c = T.charAt(t_index);
+		if( Character.isLowerCase(c) ){
+			return recursive(set, T, t_index+1, assigned);
 		}
 		
-		return null;
-	}
-	
-	
-	
-
-	private HashMap<Character, ArrayList<String>> recursive_singular(HashMap<Character, ArrayList<String>> set, String T, int t_index, HashMap<Character, String> assigned){
-			if( T.length() == t_index ){
-				String T2 = "";
-				for( int i = 0 ; i < t_index ; i++ ){
-					if( Character.isUpperCase(T.charAt(i)) ){
-						T2 = T2 + assigned.get(T.charAt(i));
-					}else{
-						T2 = T2 + T.charAt(i);
-					}
-				}
-				HashMap<Character, ArrayList<String>> basis_set = new HashMap<Character, ArrayList<String>>();
-				if( T2 != "" && this.substrings.contains(T2) ){
-					for( Character chr : assigned.keySet() ){
-						ArrayList<String> basis_list = new ArrayList<String>();
-						basis_list.add( assigned.get(chr) );
-						basis_set.put(chr, basis_list);
-					}
-				}
-				return basis_set;
-			}
+		ArrayList<String> temp = set.get(c);
+		HashMap<Character, ArrayList<String>> newSet = new HashMap<Character, ArrayList<String>>(set);
+		newSet.remove(c);
 		
-		
-			char c = T.charAt(t_index);
-			if( Character.isLowerCase(c) ){
-				return recursive_singular(set, T, t_index+1, assigned);
-			}
+		HashMap<Character, ArrayList<String>> accumulatedResult = new HashMap<Character, ArrayList<String>>();
+		for( int j = 0 ; j < temp.size() ; j++ ){
+			HashMap<Character, String> newAssigned = new HashMap<Character, String>(assigned);
+			newAssigned.put(c, temp.get(j));
 			
-			ArrayList<String> temp = set.get(c);
-			HashMap<Character, ArrayList<String>> newSet = new HashMap<Character, ArrayList<String>>(set);
-			newSet.remove(c);
+			HashMap<Character, ArrayList<String>> result = recursive(set, T, t_index+1, newAssigned);
 			
-			HashMap<Character, ArrayList<String>> accumulatedResult = new HashMap<Character, ArrayList<String>>();
-			for( int j = 0 ; j < temp.size() ; j++ ){
-				HashMap<Character, String> newAssigned = new HashMap<Character, String>(assigned);
-				newAssigned.put(c, temp.get(j));
+			for( Character chr : result.keySet() ){
+				ArrayList<String> insertIntoList = result.get(chr);	
+				ArrayList<String> mainList = accumulatedResult.get(chr);
+				if( mainList == null ){
+					mainList = new ArrayList<String>();
+				}
 				
-				HashMap<Character, ArrayList<String>> result = recursive_singular(set, T, t_index+1, newAssigned);
-				
-				for( Character chr : result.keySet() ){
-					ArrayList<String> insertIntoList = result.get(chr);	
-					ArrayList<String> mainList = accumulatedResult.get(chr);
-					if( mainList == null ){
-						mainList = new ArrayList<String>();
-					}
-					
-					for(String s : insertIntoList ){
-						if(!mainList.contains(s)){
-							mainList.add(s);
-						}
-					}
-					
-					if( accumulatedResult.get(chr) == null ){
-						accumulatedResult.put(chr, mainList);
-					}
-					
-					for( String s : (ArrayList<String>) result.get(chr) ){
-						if( accumulatedResult.get(chr) != null && !accumulatedResult.get(chr).contains(s) ){
-							accumulatedResult.get(chr).add(s);
-						}
+				for(String s : insertIntoList ){
+					if(!mainList.contains(s)){
+						mainList.add(s);
 					}
 				}
 				
+				if( accumulatedResult.get(chr) == null ){
+					accumulatedResult.put(chr, mainList);
+				}
 				
-				
-			}
-			
-			return accumulatedResult;
-			
-			
-			
+				for( String s : (ArrayList<String>) result.get(chr) ){
+					if( accumulatedResult.get(chr) != null && !accumulatedResult.get(chr).contains(s) ){
+						accumulatedResult.get(chr).add(s);
+					}
+				}
+			}	
+		}
+		return accumulatedResult;
 	}
 	
 	private void printResult(HashMap<Character, String> assigned){
@@ -271,7 +250,7 @@ public class Reducer {
 		HashMap<Character, String> assigned = new HashMap<Character, String>();
 		HashMap<Character, ArrayList<String>> result = null;
 		for(String s : this.decoder.getT() ){
-			result = recursive_singular(newR, s, 0, assigned);
+			result = recursive(newR, s, 0, assigned);
 			
 			if( result.isEmpty() ){
 				System.out.println("NO");
@@ -284,6 +263,7 @@ public class Reducer {
 			}
 		}
 		
+		this.reduceTList();
 				
 		System.out.println(newR);
 		//this.printResultList(newR);
