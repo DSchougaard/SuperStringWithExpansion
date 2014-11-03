@@ -6,20 +6,12 @@ import java.util.HashMap;
 
 public class SWEDecoder {
 	
-	private boolean lock;
 	
 	private int k;
 	private String s;
-	private ArrayList<String> t;
-	private HashMap<Character, ArrayList<String> > R;
+	private ArrayList<String> t= new ArrayList<String>();
+	private HashMap<Character, ArrayList<String> > R= new HashMap<Character, ArrayList<String>>();
 	
-	
-	public SWEDecoder() { 
-		this.lock = true;
-		
-		t = new ArrayList<String>();
-		R = new HashMap<Character, ArrayList<String>>();
-	}
 	
 	
 	public boolean parse(ArrayList<String> content) throws ParseException{
@@ -59,31 +51,29 @@ public class SWEDecoder {
 			this.R.put(subset.charAt(0), set);
 		}
 	
-		
-		//System.out.println("[SWE Decoder] File " + this.filename + " successfully decoded!");
-		lock=false;
+	
 		return true;
 	}
 	
 
 	public int getK(){
-		if(!this.lock) return this.k;
-		return 0;
+		return this.k;
+
 	}
 	
 	public String getS(){
-		if(!this.lock) return this.s;
-		return null;
+		 return this.s;
+	
 	}
 	
 	public ArrayList<String> getT(){
-		if(!this.lock) return this.t;
-		return null;
+		 return this.t;
+
 	}
 	
 	public HashMap<Character, ArrayList<String> > getR(){
-		if(!this.lock) return this.R;
-		return null;
+		return this.R;
+
 	}
 	
 	
