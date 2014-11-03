@@ -1,41 +1,45 @@
 package dk.dtu.chp.solver;
 
+import java.util.Arrays;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
-import dk.dtu.chp.decoder.ParseException;
 import dk.dtu.chp.decoder.SWEDecoder;
 import dk.dtu.chp.readers.FileReader;
 import dk.dtu.chp.readers.StdInReader;
 import dk.dtu.chp.reducer.Reducer;
-import dk.dtu.chp.solver.theBrute.TheBrute;
-import dk.dtu.chp.solver.utils.Timer;
 
 public class Main {
 
 	public static void main(String[] args) {
-		
-		
-//		Benchmarker.run(100);
-		
-		
-//		Timer timer= new Timer();
-//		timer.start();
 
+//		Benchmarker.run(5000);
+		
 		try{
-			StdInReader sir = new StdInReader();
-//			FileReader fr = new FileReader("test02.SWE");
-			SWEDecoder swed = new SWEDecoder();
-			swed.parse(sir.read());
-			Reducer reduction = new Reducer(swed, false);
-			reduction.start();
+			if(args.length==1){
+				String path=args[0];
+				FileReader fr = new FileReader(path);
+				SWEDecoder swed = new SWEDecoder();
+				swed.parse(fr.read());
+				Reducer reduction = new Reducer(swed, false);
+				
+				fr.output(reduction.start(), path);
+			}else{
+			
+				StdInReader sir = new StdInReader();
+				SWEDecoder swed = new SWEDecoder();
+				swed.parse(sir.read());
+				Reducer reduction = new Reducer(swed, false);
+				
+				sir.output(reduction.start());
+			}	
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-//		System.out.println("time: "+ timer.time() + "s");
-
 		
-		//Benchmarker.run(3);
+
+
 		
 	}
 

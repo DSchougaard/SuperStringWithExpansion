@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import dk.dtu.chp.decoder.SWEDecoder;
-import dk.dtu.chp.solver.theBrute.TheBrute;
+import dk.dtu.chp.solver.cleaner.Clean;
 
 public class Reducer {
 	// personal
@@ -140,14 +140,25 @@ public class Reducer {
 
 	private HashMap<Character, ArrayList<String>> recursive(HashMap<Character, ArrayList<String>> set, String T, int t_index, HashMap<Character, String> assigned){
 		if( T.length() == t_index ){
-			String T2 = "";
+			StringBuilder sb= new StringBuilder();
 			for( int i = 0 ; i < t_index ; i++ ){
 				if( Character.isUpperCase(T.charAt(i)) ){
-					T2 = T2 + assigned.get(T.charAt(i));
+					sb.append(assigned.get(T.charAt(i)));
+					
 				}else{
-					T2 = T2 + T.charAt(i);
+					sb.append(T.charAt(i));
+
 				}
 			}
+			String T2=sb.toString();
+//			String T2 = "";
+//			for( int i = 0 ; i < t_index ; i++ ){
+//				if( Character.isUpperCase(T.charAt(i)) ){
+//					T2 = T2 + assigned.get(T.charAt(i));
+//				}else{
+//					T2 = T2 + T.charAt(i);
+//				}
+//			}
 			HashMap<Character, ArrayList<String>> basis_set = new HashMap<Character, ArrayList<String>>();
 			if( T2 != "" && this.substrings.contains(T2) ){
 				for( Character chr : assigned.keySet() ){
@@ -245,12 +256,21 @@ public class Reducer {
 		}
 	}
 	
-	
-	public void start(){
-		if(this.print){
-			System.out.println("Before reduction");
-			this.printSetSize(this.decoder.getR());
+	private ArrayList<String> ResultList(HashMap<Character, String> assigned){
+		ArrayList<String> result = new ArrayList<String>();
+		if( assigned == null ){
+			result.add("NO");
+		}else{
+			for( Character c : assigned.keySet() ){
+				result.add(c + ":" + assigned.get(c));
+			}
 		}
+		return result;
+	}
+	
+	public ArrayList<String> start(){
+		
+
 		this.removeUnused();
 		
 		this.constructSubstrings();
@@ -259,12 +279,7 @@ public class Reducer {
 		
 		
 		this.reduceTList();
-//		System.out.println(newR);
-	
-		if(this.print){
-			System.out.println("After reduction");
-			this.printSetSize(newR);
-		}
+
 
 
 		
@@ -274,8 +289,9 @@ public class Reducer {
 			result = recursive(newR, s, 0, assigned);
 			
 			if( result.isEmpty() ){
-				System.out.println("NO");
-				return;
+				ArrayList<String> outResult = new ArrayList<String>();
+				outResult.add("NO");
+				return outResult;
 			}
 			
 			for( Character c : result.keySet() ){
@@ -284,17 +300,17 @@ public class Reducer {
 			}
 		}
 		if(!newR.isEmpty()){
-		TheBrute brutus= new TheBrute(newR, decoder.getS(), reducedTList);
-		printResultList2(brutus.run2());
-
+			Clean brutus= new Clean(newR, decoder.getS(), reducedTList);
+			
+			return ResultList(brutus.run2());
+			
 		}else{
-			System.out.println("NO");
+			ArrayList<String> outResult = new ArrayList<String>();
+			outResult.add("NO");
+
+			return outResult;
 		}
-//		System.out.println("result: "+brutus.run());	
-//		System.out.println(newR);
-//		this.printResultList(newR);
-		//HashMap<Character, String> result = this.recursive(newR, this.decoder.getT(), assigned);
-		//this.printResult(newR);
+
 
 		
 	}

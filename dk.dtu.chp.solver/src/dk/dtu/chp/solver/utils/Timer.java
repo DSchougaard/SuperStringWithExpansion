@@ -17,13 +17,17 @@ public class Timer {
 
 	/**
 	 * records the current time
-	 * @return
+	 * @return time since start
 	 */
 	public double time(){
 		time.add(System.nanoTime()-start);
 		return Time.NanoSeconds.ToSeconds(time.get(time.size()-1));
 	}
 
+	/**
+	 * 
+	 * @return time since last time
+	 */
 	public double difference(){
 		time.add(System.nanoTime()-start);
 		if(time.size()>=2){

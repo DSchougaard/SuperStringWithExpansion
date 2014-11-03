@@ -31,5 +31,12 @@ public class StdInReader {
 		}
 		return contents;
 	}
+
+	public void output(ArrayList<String> start) {
+		for (String string : start) {
+			System.out.println(string);
+		}
+		
+	}
 	
 }
