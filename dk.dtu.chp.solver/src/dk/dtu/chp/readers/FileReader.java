@@ -27,6 +27,6 @@ public class FileReader {
 	}
 	
 	public void output(ArrayList<String> output, String path) throws IOException{
-		Files.write(Paths.get(path.substring(0, path.length()-3)+"SOL"), output);
+		Files.write(Paths.get(path.substring(0, path.length()-3)+"SOL"), output,StandardCharsets.UTF_8);
 	}
 }
